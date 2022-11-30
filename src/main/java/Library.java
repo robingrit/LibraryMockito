@@ -21,16 +21,42 @@ public class Library {
         book.setComment(coment);
     }
     public int calculatePrice(Book book) {
+
         return MonthlyCost * book.getQuantity();
     }
 
     public void lendBook(Book book) {
-        int amountToPay = calculatePrice(book);
-        if (book.isBorrowed()) {
-            customer.pay(amountToPay);
+        if (book.isBorrowed() !=true) {
+            customer.pay(calculatePrice(book));
+            book.setBorrowed(true);
         }
+        else{
+            throw new IllegalStateException();
+        }
+
+
     }
 
+    public ArrayList<Book> SearchBook(String input){
+
+        ArrayList<Book> SearchBookList = new ArrayList<>();
+        for (Book item : getShelf()) {
+            if (item.getAuthor().equals(input)) {
+                //System.out.println(item.getBookName());
+
+                SearchBookList.add(item);
+
+            }
+            else if (item.getReleaseDate().equals(input)){
+                SearchBookList.add(item);
+            }
+            else if(item.getBookName().equals(input)){
+                SearchBookList.add(item);
+            }
+        }
+        return SearchBookList;
+
+    }
 
 
 }

@@ -37,18 +37,21 @@ class LibraryTest {
             Book book = new Book("Moby Dick", "Herman Melville", "1851-10-18", "Sea", 1);
             Book book1 = new Book("The Lord of the Rings", "J.R.R. Tolkien", "1954-07-29", "Fantasy", 1);
             Book book2 = new Book("Harry Potter", "J.K. Rowling", "1999", "Magic", 1);
+            Book booktwo = new Book("Moby Dick2", "Herman Melville", "1851-10-18", "Sea", 1);
+
             library.addBookToList(book);
             library.addBookToList(book1);
             library.addBookToList(book2);
-            String actual = null;
-            String expected = "Moby Dick";
-            for (Book item : library.getShelf()) {
-                if (item.getAuthor().equals("Herman Melville")) {
-                    actual = item.getBookName();
-                    System.out.println(item.getBookName());
-                }
-            }
-            assertEquals(expected, actual);
+            library.addBookToList(booktwo);
+
+
+            String input = "Herman Melville";
+            List<Book> actualValues = library.SearchBook(input);
+            List<Book> expectedValues = Arrays.asList(book, booktwo);
+
+
+
+            assertEquals(expectedValues, actualValues);
         }
 
         @Test
@@ -59,18 +62,11 @@ class LibraryTest {
             library.addBookToList(book);
             library.addBookToList(book1);
             library.addBookToList(book2);
-            String actual = null;
-            String expected = "The Lord of the Rings";
-            for (Book item : library.getShelf()) {
-                if (item.getBookName().equals(expected)) {
-                    actual = item.getBookName();
+            String input = "The Lord of the Rings";
+            List<Book> actualValues = library.SearchBook(input);
+            List<Book> expectedValues = Arrays.asList(book1);
 
-
-                    System.out.println(item.getBookName());
-                }
-            }
-
-            assertEquals(expected, actual);
+            assertEquals(expectedValues, actualValues);
         }
 
         @Test
@@ -81,16 +77,12 @@ class LibraryTest {
             library.addBookToList(book);
             library.addBookToList(book1);
             library.addBookToList(book2);
-            String actual = null;
-            String expected = "1954-07-29";
-            for (Book item : library.getShelf()) {
-                if (item.getReleaseDate().equals(expected)) {
-                    actual = item.getReleaseDate();
-                    System.out.println(item.getBookName());
-                }
-            }
 
-            assertEquals(expected, actual);
+            String input = "1851-10-18";
+            List<Book> actualValues = library.SearchBook(input);
+            List<Book> expectedValues = Arrays.asList(book);
+
+            assertEquals(expectedValues, actualValues);
         }
     }
 
@@ -101,12 +93,12 @@ class LibraryTest {
         Book book2 = new Book("Harry Potter", "J.K. Rowling", "1999", "Magic", 1);
         library.addBookToList(book);
         library.addBookToList(book1);
+        library.addBookToList(book2);
 
-        System.out.println(book2.getGrade());
+        //System.out.println(book2.getGrade());
 
         library.addGrade(book2,1);
-        System.out.println(book2.getGrade());
-        library.addBookToList(book2);
+        //System.out.println(book2.getGrade());
         int actual = book2.getGrade();
         int expected = 1;
 
@@ -147,13 +139,13 @@ class LibraryTest {
     }
 
     @Test
-    public void borrowTwoBooks(){
+    public void VerifyPaymanetWhenBorrowingTwoBooks(){
         Book book = new Book("Moby Dick", "Herman Melville", "1851-10-18", "Sea", 1);
         Book book1 = new Book("The Lord of the Rings", "J.R.R. Tolkien", "1954-07-29", "Fantasy", 1);
         Book book2 = new Book("Harry Potter", "J.K. Rowling", "1999", "Magic", 1);
 
-        book1.setBorrowed(true);
-        book2.setBorrowed(true);
+        book1.setBorrowed(false);
+        book2.setBorrowed(false);
 
         library.lendBook(book1);
         library.lendBook(book2);
@@ -164,6 +156,19 @@ class LibraryTest {
 
 
         assertEquals(actualValues, expectedValues);
+    }
+    @Test
+    public void BorrowedBookcantBeBorrowedTwice(){
+        Book book1 = new Book("The Lord of the Rings", "J.R.R. Tolkien", "1954-07-29", "Fantasy", 1);
+
+
+        library.lendBook(book1);
+
+        Class<IllegalStateException> expected = IllegalStateException.class;
+
+
+
+        assertThrows(expected, ()->library.lendBook(book1) );
     }
 
     @ParameterizedTest
